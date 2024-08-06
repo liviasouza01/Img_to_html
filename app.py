@@ -13,9 +13,9 @@ genai.configure(api_key=API_KEY)
 
 generation_config = {
     "temperature": 0,
-    "top_p": 0.95,
-    "top_k": 64,
-    "max_output_tokens": 10000,
+    "top_p": 1,
+    "top_k": 1,
+    "max_output_tokens": 3000,
 }
 
 MODEL_NAME = "gemini-1.5-pro"
@@ -61,18 +61,18 @@ def main():
                 html_prompt = f"Create an HTML file based on the provided image. Include {framework} CSS within the HTML file to style the elements. Make sure the colors used are the same as the original UI. The UI needs to be responsive and mobile-first, matching the original UI as closely as possible. Do not include any explanations or comments. Avoid using ```html. and ``` at the end. ONLY return the HTML code with inline CSS."
                 initial_html = send_message_to_model(html_prompt, temp_image_path)
                 st.code(initial_html, language='html')
-
-                st.write("Refining website...")
-                refine_html_prompt = f"Validate the following HTML code based on the provided image and provide a refined version of the HTML code with {framework} CSS that improves accuracy, responsiveness, and adherence to the original design. ONLY return the refined HTML code with inline CSS. Avoid using ```html. and ``` at the end. Here is the initial HTML: {initial_html}"
-                refined_html = send_message_to_model(refine_html_prompt, temp_image_path)
-                st.code(refined_html, language='html')
+                ### TRYING TO AVOID RECITATION ERROR ###
+                #st.write("Refining website...")
+                #refine_html_prompt = f"Validate the following HTML code based on the provided image and provide a refined version of the HTML code with {framework} CSS that improves accuracy, responsiveness, and adherence to the original design. ONLY return the refined HTML code with inline CSS. Avoid using ```html. and ``` at the end. Here is the initial HTML: {initial_html}"
+                #refined_html = send_message_to_model(refine_html_prompt, temp_image_path)
+                #st.code(refined_html, language='html')
 
                 with open("index.html", "w") as file:
-                    file.write(refined_html)
+                    file.write(initial_html)
                 st.success("HTML file 'index.html' has been created.")
-                st.download_button(label="Download HTML", data=refined_html, file_name="index.html", mime="text/html")
+                st.download_button(label="Download HTML", data=initial_html, file_name="index.html", mime="text/html")
         except Exception as e:
-            st.error(f"An error occurred: {e}")
+            st.error(f"ERROR... PIIIIIII: {e}")
 
 if __name__ == "__main__":
     main()
